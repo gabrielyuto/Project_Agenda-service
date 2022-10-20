@@ -30,26 +30,29 @@ public class PacienteController {
   }
 
   @GetMapping
-  public ResponseEntity<List<Paciente>> listarTodos() {
+  public ResponseEntity<List<PacienteResponse>> listarTodos() {
     List<Paciente> pacientes = service.listarTodos();
-    return ResponseEntity.status(HttpStatus.OK).body(pacientes);
+    List<PacienteResponse> pacienteResponses = PacienteMapper.toPacienteResponseList(pacientes);
+    return ResponseEntity.status(HttpStatus.OK).body(pacienteResponses);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Paciente> buscarPorId(@PathVariable Long id) {
+  public ResponseEntity<PacienteResponse> buscarPorId(@PathVariable Long id) {
     Optional<Paciente> optPaciente = service.buscarPorId(id);
 
     if(optPaciente.isEmpty()) {
       return ResponseEntity.notFound().build();
     }
 
-    return ResponseEntity.status(HttpStatus.OK).body(optPaciente.get());
+    return ResponseEntity.status(HttpStatus.OK).body(PacienteMapper.toPacienteResponse(optPaciente.get()));
   }
 
   @PutMapping
-  public ResponseEntity<Paciente> alterar(@RequestBody Paciente paciente) {
+  public ResponseEntity<PacienteResponse> alterar(@RequestBody PacienteRequest request) {
+    Paciente paciente = PacienteMapper.toPaciente(request);
     Paciente pacienteSalvo = service.salvar(paciente);
-    return ResponseEntity.status(HttpStatus.OK).body(pacienteSalvo);
+    PacienteResponse pacienteResponse = PacienteMapper.toPacienteResponse(pacienteSalvo);
+    return ResponseEntity.status(HttpStatus.OK).body(pacienteResponse);
   }
 
   @DeleteMapping("/{id}")
