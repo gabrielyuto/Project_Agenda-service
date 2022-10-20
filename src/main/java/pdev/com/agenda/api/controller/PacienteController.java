@@ -19,20 +19,21 @@ import java.util.Optional;
 public class PacienteController {
 
   private final PacienteService service;
+  private final PacienteMapper mapper;
 
   @PostMapping
   public ResponseEntity<PacienteResponse> salvar(@RequestBody PacienteRequest request) {
-    Paciente paciente = PacienteMapper.toPaciente(request);
+    Paciente paciente = mapper.toPaciente(request);
 
     Paciente pacienteSalvo = service.salvar(paciente);
-    PacienteResponse pacienteResponse = PacienteMapper.toPacienteResponse(pacienteSalvo);
+    PacienteResponse pacienteResponse = mapper.toPacienteResponse(pacienteSalvo);
     return ResponseEntity.status(HttpStatus.CREATED).body(pacienteResponse);
   }
 
   @GetMapping
   public ResponseEntity<List<PacienteResponse>> listarTodos() {
     List<Paciente> pacientes = service.listarTodos();
-    List<PacienteResponse> pacienteResponses = PacienteMapper.toPacienteResponseList(pacientes);
+    List<PacienteResponse> pacienteResponses = mapper.toPacienteResponseList(pacientes);
     return ResponseEntity.status(HttpStatus.OK).body(pacienteResponses);
   }
 
@@ -44,14 +45,14 @@ public class PacienteController {
       return ResponseEntity.notFound().build();
     }
 
-    return ResponseEntity.status(HttpStatus.OK).body(PacienteMapper.toPacienteResponse(optPaciente.get()));
+    return ResponseEntity.status(HttpStatus.OK).body(mapper.toPacienteResponse(optPaciente.get()));
   }
 
   @PutMapping
   public ResponseEntity<PacienteResponse> alterar(@RequestBody PacienteRequest request) {
-    Paciente paciente = PacienteMapper.toPaciente(request);
+    Paciente paciente = mapper.toPaciente(request);
     Paciente pacienteSalvo = service.salvar(paciente);
-    PacienteResponse pacienteResponse = PacienteMapper.toPacienteResponse(pacienteSalvo);
+    PacienteResponse pacienteResponse = mapper.toPacienteResponse(pacienteSalvo);
     return ResponseEntity.status(HttpStatus.OK).body(pacienteResponse);
   }
 
